@@ -25,7 +25,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .page.active{display:block}
 .section-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin:1.25rem 0 8px}
 .section-label:first-child{margin-top:0}
-
+ 
 .ai-box{background:#26215C;border-radius:var(--r);padding:14px;margin-bottom:1rem}
 .ai-label{font-size:11px;font-weight:600;color:#AFA9EC;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .ai-dot{width:6px;height:6px;border-radius:50%;background:#9fe1cb;flex-shrink:0}
@@ -44,12 +44,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ai-res.show{display:block}
 .ai-res-lbl{font-size:10px;font-weight:600;color:#9fe1cb;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .ai-res-txt{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5}
-
+ 
 input[type=text],input[type=email],input[type=tel],input[type=number]{font-family:inherit;font-size:14px;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--surface);color:var(--text);width:100%;outline:none;transition:border-color .15s;-webkit-appearance:none}
 input:focus{border-color:#1D9E75}
 .i2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 .i1{margin-bottom:8px}
-
+ 
 .sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:border-color .2s}
 .sc.on{border-color:var(--teal-bd);border-width:1.5px}
 .sc.pop{animation:pop .35s ease}
@@ -73,7 +73,7 @@ input:focus{border-color:#1D9E75}
 .qw input{width:100px;text-align:right}
 .qu{font-size:12px;color:var(--text3);white-space:nowrap}
 .fn{font-size:13px;color:var(--teal);font-weight:600;padding:4px 0}
-
+ 
 .stk{position:sticky;bottom:0;background:var(--dark);padding:12px 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ti .tl{font-size:11px;color:#888;margin-bottom:1px}
 .ti .ta{font-size:20px;font-weight:700;color:#fff}
@@ -83,7 +83,7 @@ input:focus{border-color:#1D9E75}
 .ab:active{transform:scale(.97)}
 .ab.sh{background:#1D9E75;color:#fff}
 .ab.sn2{background:#fff;color:var(--dark)}
-
+ 
 .cvh{text-align:center;padding:2rem 1rem 1.5rem}
 .cvn{font-size:17px;font-weight:600;margin-bottom:3px}
 .cva{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
@@ -105,7 +105,7 @@ input:focus{border-color:#1D9E75}
 .pp{font-size:22px;font-weight:700}
 .pl{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px}
 .pw{font-size:10px;color:var(--text3);margin-top:2px}
-
+ 
 .ss{background:var(--bg);border-radius:var(--r-sm);padding:12px;margin-bottom:1rem;border:1px solid var(--border)}
 .sr{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
 .sr:last-child{border-bottom:none}
@@ -119,15 +119,15 @@ input:focus{border-color:#1D9E75}
 </style>
 </head>
 <body>
-
+ 
 <div class="topbar">
   <a class="back" href="/index.html">‹ Home</a>
   <div class="topbar-title">Quote calculator</div>
   <div class="topbar-sub" id="tt">$0</div>
 </div>
-
+ 
 <div class="page active" id="pb">
-
+ 
   <div class="ai-box">
     <div class="ai-label"><div class="ai-dot"></div>AI quote builder</div>
     <textarea class="ai-ta" id="ai-in" placeholder="Describe the job... e.g. '850 sq ft LVP mid grade, full interior paint, customer is Sarah Jones at 412 Maple Dr'" rows="3"></textarea>
@@ -141,7 +141,7 @@ input:focus{border-color:#1D9E75}
       <div class="ai-res-txt" id="ai-res-txt"></div>
     </div>
   </div>
-
+ 
   <div class="section-label">Customer info</div>
   <div class="i2">
     <input type="text"  id="cn" placeholder="Customer name" oninput="upd()">
@@ -149,12 +149,12 @@ input:focus{border-color:#1D9E75}
   </div>
   <div class="i1"><input type="text"  id="ca" placeholder="Property address" oninput="upd()"></div>
   <div class="i1"><input type="email" id="ce" placeholder="Email address"></div>
-
+ 
   <div class="section-label">Services</div>
   <div id="sl"></div>
   <div style="height:80px"></div>
 </div>
-
+ 
 <div class="page" id="pcv">
   <div class="cvh">
     <div class="cvn" id="cvn">—</div>
@@ -178,7 +178,7 @@ input:focus{border-color:#1D9E75}
   </div>
   <div style="height:80px"></div>
 </div>
-
+ 
 <div class="page" id="psn">
   <div class="section-label">Quote summary</div>
   <div class="ss" id="snsum"></div>
@@ -207,7 +207,7 @@ input:focus{border-color:#1D9E75}
   </div>
   <div style="height:80px"></div>
 </div>
-
+ 
 <div class="stk" id="stk">
   <div class="ti">
     <div class="tl">Project total</div>
@@ -219,7 +219,7 @@ input:focus{border-color:#1D9E75}
     <button class="ab sn2" onclick="showSN()">Send quote</button>
   </div>
 </div>
-
+ 
 <script>
 const S=[
   {id:'lvp', name:'LVP Flooring',   unit:'sq ft',flatOnly:false,flatTiers:[],
@@ -238,7 +238,7 @@ S.forEach(s=>{st[s.id]={on:false,tier:0,qty:0}});
 const fl=s=>s.flatOnly||s.flatTiers.includes(st[s.id].tier);
 const tot=s=>{const v=st[s.id];if(!v.on)return 0;return fl(s)?s.tiers[v.tier].r:Math.round(v.qty*s.tiers[v.tier].r)};
 const fmt=n=>'$'+Math.round(n).toLocaleString();
-
+ 
 function rend(){
   document.getElementById('sl').innerHTML=S.map(s=>{
     const v=st[s.id],f=fl(s),t=tot(s),pr=v.on&&t>0?fmt(t):s.tiers[v.tier].d;
@@ -262,13 +262,13 @@ function upd(){
   document.getElementById('sd2').textContent=fmt(g*.5)+' deposit';
   document.getElementById('tt').textContent=fmt(g);
 }
-
+ 
 async function runAI(){
   const inp=document.getElementById('ai-in').value.trim();
   if(!inp)return;
   const btn=document.getElementById('ai-btn');
   btn.disabled=true;btn.classList.add('loading');
-
+ 
   try{
     const res=await fetch('/api/quote',{
       method:'POST',
@@ -278,7 +278,7 @@ async function runAI(){
     if(!res.ok) throw new Error('Server error '+res.status);
     const p=await res.json();
     if(p.error) throw new Error(p.error);
-
+ 
     if(p.customer){
       if(p.customer.name)    document.getElementById('cn').value=p.customer.name;
       if(p.customer.phone)   document.getElementById('cp').value=p.customer.phone;
@@ -297,7 +297,7 @@ async function runAI(){
   }
   btn.disabled=false;btn.classList.remove('loading');
 }
-
+ 
 function showCV(){
   const nm=document.getElementById('cn').value||'Your Project';
   const ad=document.getElementById('ca').value||'';
@@ -313,7 +313,7 @@ function showCV(){
   document.getElementById('cvf').innerHTML=g?[6,12,24].map(m=>`<div class="fc"><div class="fm">${m} mo</div><div class="fp">${fmt(dep/m)}/mo</div><div class="fn2">on deposit</div></div>`).join(''):'';
   gp('pcv');
 }
-
+ 
 function showSN(){
   const nm=document.getElementById('cn').value||'—';
   const em=document.getElementById('ce').value||'No email entered';
@@ -333,14 +333,14 @@ function showSN(){
   document.getElementById('snsum').innerHTML=h;
   gp('psn');
 }
-
+ 
 function gp(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('stk').style.display=id==='pb'?'flex':'none';
   window.scrollTo(0,0);
 }
-
+ 
 function nq(){
   S.forEach(s=>{st[s.id]={on:false,tier:0,qty:0}});
   ['cn','cp','ca','ce'].forEach(i=>document.getElementById(i).value='');
@@ -348,7 +348,7 @@ function nq(){
   document.getElementById('ai-res').classList.remove('show');
   rend();upd();gp('pb');
 }
-
+ 
 rend();upd();
 </script>
 </body>
