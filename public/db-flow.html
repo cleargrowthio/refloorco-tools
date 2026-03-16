@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReFloorCo — Design & Build Flow</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #f8f7f4;
+  --surface:    #ffffff;
+  --border:     #e4e1da;
+  --border-md:  #c8c4bc;
+  --text:       #1a1a18;
+  --text-2:     #5a5a56;
+  --text-3:     #9a9994;
+  --dark:       #1c1c1c;
+  --purple-bg:  #EEEDFE;
+  --purple-bd:  #AFA9EC;
+  --purple-tx:  #3C3489;
+  --purple-dk:  #26215C;
+  --green-bg:   #eaf3de;
+  --green-bd:   #97c459;
+  --green-tx:   #27500a;
+  --green-mid:  #3B6D11;
+  --amber-bg:   #faeeda;
+  --amber-bd:   #ef9f27;
+  --amber-tx:   #412402;
+  --amber-mid:  #633806;
+  --blue-bg:    #E6F1FB;
+  --blue-bd:    #85B7EB;
+  --blue-tx:    #0C447C;
+  --blue-mid:   #185FA5;
+  --red-bg:     #fcebeb;
+  --red-bd:     #f09595;
+  --red-tx:     #791f1f;
+  --red-mid:    #A32D2D;
+  --gray-bg:    #F4F4F2;
+  --gray-bd:    #C8C4BC;
+  --gray-tx:    #2C2C2A;
+  --gray-mid:   #5F5E5A;
+  --radius:     10px;
+  --radius-lg:  14px;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 4rem;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+.header {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.brand    { font-size: 13px; font-weight: 500; color: var(--text-3); letter-spacing: .06em; text-transform: uppercase; }
+.doc-title{ font-size: 13px; color: var(--text-2); }
+
+.progress-wrap { width: 100%; max-width: 700px; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 4px; }
+.progress { display: flex; align-items: center; gap: 0; min-width: max-content; }
+
+.step-dot {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; flex-shrink: 0;
+  cursor: pointer; transition: all .2s;
+  border: 1px solid var(--border-md);
+  background: var(--surface); color: var(--text-3);
+}
+.step-dot:hover          { border-color: var(--text-3); color: var(--text-2); }
+.step-dot.active         { background: var(--purple-dk); border-color: var(--purple-dk); color: #fff; }
+.step-dot.done           { background: var(--purple-bg); border-color: var(--purple-bd); color: var(--purple-tx); }
+.step-dot.gate-active    { background: #854F0B; border-color: #854F0B; color: #fff; }
+.step-dot.gate-done      { background: var(--amber-bg); border-color: var(--amber-bd); color: var(--amber-tx); }
+
+.step-line { flex: 1; height: 1px; background: var(--border); min-width: 10px; transition: background .3s; }
+.step-line.done { background: var(--purple-bd); }
+
+.card {
+  width: 100%; max-width: 700px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  animation: fadeIn .25s ease;
+}
+.card.gate-card { border: 2px solid var(--amber-bd); }
+.card.fork-card { border: 2px solid var(--purple-bd); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-tag   { font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+.step-title { font-size: 21px; font-weight: 500; color: var(--text); margin-bottom: 10px; line-height: 1.25; }
+.step-body  { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 1.25rem; }
+
+.banner { padding: 12px 16px; margin-bottom: 1.25rem; border-left: 3px solid; border-radius: 0; }
+.banner.amber  { background: var(--amber-bg); border-color: var(--amber-bd); }
+.banner.purple { background: var(--purple-bg); border-color: var(--purple-bd); }
+.banner-title  { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.banner.amber  .banner-title { color: var(--amber-tx); }
+.banner.purple .banner-title { color: var(--purple-tx); }
+.banner-body { font-size: 13px; line-height: 1.55; }
+.banner.amber  .banner-body { color: var(--amber-mid); }
+.banner.purple .banner-body { color: var(--purple-tx); }
+
+.fork-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+.fork-inner { border-radius: var(--radius); padding: 14px; border: 1px solid; }
+.fork-inner.verbal   { background: var(--green-bg); border-color: var(--green-bd); }
+.fork-inner.document { background: var(--blue-bg);  border-color: var(--blue-bd); }
+.fork-trigger { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; font-family: 'DM Mono', monospace; }
+.fork-inner.verbal   .fork-trigger { color: var(--green-mid); }
+.fork-inner.document .fork-trigger { color: var(--blue-mid); }
+.fork-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.fork-inner.verbal   .fork-title { color: var(--green-tx); }
+.fork-inner.document .fork-title { color: var(--blue-tx); }
+.fork-body { font-size: 12px; line-height: 1.55; }
+.fork-inner.verbal   .fork-body { color: var(--green-mid); }
+.fork-inner.document .fork-body { color: var(--blue-mid); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+.detail-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; }
+.detail-label { font-size: 10px; color: var(--text-3); font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.detail-value { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.4; }
+
+.scripts-wrap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+.script-box   { background: var(--dark); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 1rem; }
+.script-label { font-size: 10px; color: #777; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+.script-text  { font-size: 13px; color: #d8d6d0; line-height: 1.65; font-style: italic; }
+
+.rules { margin-bottom: 1.25rem; }
+.rule-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.rule-row:last-child { border-bottom: none; }
+.rule-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.rule-dot.green  { background: #639922; }
+.rule-dot.red    { background: #E24B4A; }
+.rule-dot.amber  { background: #BA7517; }
+.rule-dot.purple { background: #534AB7; }
+
+.outcome-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+.outcome-card { border-radius: var(--radius); padding: 12px 14px; border: 1px solid; }
+.outcome-card.yes { background: var(--green-bg); border-color: var(--green-bd); }
+.outcome-card.no  { background: var(--red-bg);   border-color: var(--red-bd); }
+.outcome-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.outcome-card.yes .outcome-title { color: var(--green-tx); }
+.outcome-card.no  .outcome-title { color: var(--red-tx); }
+.outcome-body { font-size: 12px; line-height: 1.55; }
+.outcome-card.yes .outcome-body { color: var(--green-mid); }
+.outcome-card.no  .outcome-body { color: var(--red-mid); }
+
+.tier-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+.tier-card { border-radius: var(--radius); padding: 10px 12px; border: 1px solid; }
+.tier-card.t1 { background: var(--gray-bg);   border-color: var(--gray-bd); }
+.tier-card.t2 { background: var(--blue-bg);   border-color: var(--blue-bd); }
+.tier-card.t3 { background: var(--green-bg);  border-color: var(--green-bd); }
+.tier-name { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
+.tier-card.t1 .tier-name { color: var(--gray-tx); }
+.tier-card.t2 .tier-name { color: var(--blue-tx); }
+.tier-card.t3 .tier-name { color: var(--green-tx); }
+.tier-range { font-size: 11px; }
+.tier-card.t1 .tier-range { color: var(--gray-mid); }
+.tier-card.t2 .tier-range { color: var(--blue-mid); }
+.tier-card.t3 .tier-range { color: var(--green-mid); }
+.tier-desc { font-size: 11px; color: var(--text-3); margin-top: 3px; line-height: 1.4; }
+
+.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.nav-btn {
+  font-size: 13px; font-weight: 500; padding: 7px 18px;
+  border-radius: var(--radius); cursor: pointer;
+  background: transparent; border: 1px solid var(--border-md);
+  color: var(--text); transition: all .15s; font-family: inherit;
+}
+.nav-btn:hover:not(:disabled) { background: var(--bg); border-color: var(--text-3); }
+.nav-btn:active:not(:disabled){ transform: scale(.98); }
+.nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+.nav-btn.primary  { background: var(--purple-dk); border-color: var(--purple-dk); color: #fff; }
+.nav-btn.primary:hover { background: var(--purple-tx); }
+.step-counter { font-size: 12px; color: var(--text-3); font-family: 'DM Mono', monospace; }
+</style>
+</head>
+<body><div style="background:#26215C;padding:.75rem 1.25rem;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100"><a href="/index.html" style="color:#CECBF6;font-size:14px;font-weight:500;text-decoration:none">‹ Home</a><span style="font-size:15px;font-weight:600;color:#fff;flex:1">Design &amp; Build flow</span></div>
+
+<div class="header">
+  <span class="brand">ReFloorCo — A ReCo Group Company</span>
+  <span class="doc-title">Design &amp; Build Flow</span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress" id="progress"></div>
+</div>
+
+<div class="card" id="card"></div>
+
+<script>
+const steps = [
+  {
+    tag:"Step 1 of 9 — lead comes in",
+    title:"Rep identifies a D&B lead",
+    body:"A D&B lead is anyone wanting more than a single service — kitchen, bathroom, multi-room renovation, layout changes. The moment you hear words like 'renovation,' 'redo my kitchen,' or 'the whole place needs work,' this is a D&B lead. Route it correctly from the first conversation.",
+    type:"normal",
+    details:[
+      {label:"D&B signals",     value:"Kitchen, bathroom, multi-room, renovation, layout change"},
+      {label:"Lead sources",    value:"Inbound call, referral, door knock, form submission"},
+      {label:"Rep action",      value:"Identify it as D&B — do not quote on the spot"},
+      {label:"What comes next", value:"Qualification call or prelim estimate"},
+    ],
+    rules:[
+      {type:"green",  text:"The moment they say 'renovation' — it's D&B"},
+      {type:"red",    text:"Never give a firm number on the spot for a D&B lead"},
+      {type:"purple", text:"Productized rep who meets a D&B lead: hand off to D&B rep"},
+    ],
+    script:null, scripts:null, outcomes:null, tiers:false,
+  },
+  {
+    tag:"Step 2 of 9 — qualification",
+    title:"Qualify on the call — two prelim modes",
+    body:"This is where the flow splits based on how the lead came in and what info you have. Both paths lead to the same place — a qualified lead who confirms interest before a site visit is booked. Choose the mode that fits the situation.",
+    type:"fork",
+    fork:{
+      verbal:{
+        trigger:"Inbound call or you call them",
+        title:"Mode A — Verbal prelim on the call",
+        body:"Give ballpark ranges live on the phone. No document yet. This is a qualification conversation — you're filtering for budget fit and serious intent in real time. If they're in range and interested, follow up with the document after.",
+      },
+      document:{
+        trigger:"They send photos, listing link, or request numbers in writing",
+        title:"Mode B — Document prelim sent same day",
+        body:"Customer asks for something in writing, or sends photos or a listing link. Build the prelim estimate from that info and send via email + text PDF same day. This becomes the qualification document.",
+      },
+    },
+    rules:[
+      {type:"green", text:"Mode A and B both work — pick based on how the lead came in"},
+      {type:"amber", text:"Mode A: give ranges honestly — don't lowball to hook them"},
+      {type:"green", text:"Mode A → if they're interested, follow up with the document after the call"},
+      {type:"amber", text:"Mode B: can build the prelim from photos or a listing link — no site visit needed yet"},
+    ],
+    scripts:[
+      {label:"Mode A — verbal prelim on the call",       text:"\"Based on what you're describing — a kitchen and two bathrooms — you're probably looking somewhere in the range of $18,000 to $35,000 depending on the level of finish you want. Does that range work for your budget?\""},
+      {label:"Mode A → follow-up after positive response",text:"\"Great — let me send you a written breakdown of those numbers so you have something to reference. I'll get that over in the next hour. Once you've had a chance to look it over, just reply and we'll get a walkthrough on the calendar.\""},
+      {label:"Mode B — sending the prelim document",      text:"\"I took a look at the photos you sent — based on what I'm seeing, I put together a preliminary estimate. I'm sending it to your email now and I'll text you the PDF as well. Take a look and just reply back when you're ready to move forward.\""},
+    ],
+    script:null, outcomes:null, tiers:false, details:null,
+  },
+  {
+    tag:"Step 3 of 9 — qualification gate",
+    title:"Wait for confirmation before booking the visit",
+    body:"Whether you ran a verbal prelim or sent the document, the rule is the same: you do not book a site visit until the customer has confirmed interest. On a verbal prelim, a 'yes, that range works' on the call counts. On a document prelim, a reply to the email counts. Confirmation first — then the visit.",
+    type:"gate",
+    details:[
+      {label:"Verbal prelim gate",    value:"Positive response on the call — 'that range works' counts"},
+      {label:"Document prelim gate",  value:"Email or text reply confirming interest"},
+      {label:"Follow-up if no reply", value:"One text follow-up at 48 hrs, then archive"},
+      {label:"Re-engage timeline",    value:"Add to 60–90 day list if no reply after follow-up"},
+    ],
+    rules:[
+      {type:"red",   text:"No site visit without confirmation — verbal or written"},
+      {type:"green", text:"A positive response on the call is valid confirmation for Mode A"},
+      {type:"amber", text:"Mode B: follow up once by text after 48 hours if no email reply"},
+      {type:"red",   text:"Archive after one follow-up with no response — do not keep chasing"},
+    ],
+    script:{label:"48-hr follow-up (Mode B only)", text:"\"Hey [Name], just following up on the estimate I sent over. Wanted to make sure it landed. No rush — just reply whenever you're ready and I'll get a walkthrough scheduled.\""},
+    scripts:null,
+    outcomes:{
+      yes:{title:"Confirmed — book the visit", body:"Positive response received. Move to Step 4 and schedule the site visit."},
+      no: {title:"No response after follow-up", body:"Archive the lead. Add to 60–90 day re-engage list. No site visit."},
+    },
+    tiers:false,
+  },
+  {
+    tag:"Step 4 of 9 — site visit",
+    title:"Complete the site visit",
+    body:"Lead is qualified. Now book and complete the walkthrough. This visit has two jobs: understand the full scope and build rapport. Take detailed notes and photos of every space. You need to know what they want to change, what they want to keep, and what the property's current condition looks like.",
+    type:"normal",
+    details:[
+      {label:"Duration",   value:"30–60 min depending on property size"},
+      {label:"Bring",      value:"Tape measure, phone for photos, notepad, D&B tier doc"},
+      {label:"Document",   value:"Every room, existing conditions, customer's priorities"},
+      {label:"Goal",       value:"Understand scope + rapport — not to present pricing yet"},
+    ],
+    rules:[
+      {type:"green", text:"Take photos of every space — before/after potential sells the project"},
+      {type:"green", text:"Listen more than you talk — ask open questions about their vision"},
+      {type:"red",   text:"Do not present pricing on this visit — it's discovery only"},
+      {type:"amber", text:"If scope sounds like Transform tier — flag it before presenting tiers"},
+    ],
+    script:{label:"Opening the site visit", text:"\"I want to walk through the whole property first so I really understand what you're working with and what you want to accomplish. Then I'll walk you through our three renovation options and we'll figure out which one fits.\""},
+    scripts:null, outcomes:null, tiers:false,
+  },
+  {
+    tag:"Step 5 of 9 — tier presentation",
+    title:"Present the three D&B tiers",
+    body:"With the site walk complete, present the D&B tier document. Walk through all three options — Refresh, Renovate, Transform — and explain what each covers. Name your recommendation based on the site walk, then let them pick. Don't push a tier.",
+    type:"normal",
+    details:[
+      {label:"Document used",  value:"Design & Build tiers document"},
+      {label:"Start with",     value:"Comparison table — shows the progression clearly"},
+      {label:"Your move",      value:"Name a recommended tier, then step back"},
+      {label:"Listen for",     value:"Budget signals, scope ambition, timeline pressure"},
+    ],
+    rules:[
+      {type:"green", text:"Always show all three tiers — never present just one"},
+      {type:"green", text:"Name your recommendation — it makes the conversation concrete"},
+      {type:"amber", text:"If between tiers, explain what they get by stepping up"},
+      {type:"red",   text:"Never quote specific line-item prices here — that comes in the full scope quote"},
+    ],
+    script:{label:"Presenting the tiers", text:"\"We have three renovation levels. Refresh is a cosmetic reset — floors, paint, cabinets, fixtures. Renovate adds countertops, vanities, doors, plumbing, exterior. Transform is a full gut we design custom for your layout. Based on what you showed me, I think [tier] is the right fit — but look at all three and tell me what feels right to you.\""},
+    scripts:null, outcomes:null, tiers:true,
+  },
+  {
+    tag:"Step 6 of 9 — tier confirmation",
+    title:"Customer confirms their tier in writing",
+    body:"Once they land on a tier, confirm it in writing before anything else moves. A text or email reply naming the tier is sufficient. This written confirmation is what triggers the team to build the full scope quote. Without it, nothing proceeds.",
+    type:"normal",
+    details:[
+      {label:"What counts",    value:"Text or email naming the chosen tier"},
+      {label:"Rep reply",      value:"Confirm receipt + set expectation: full quote in 2–3 days"},
+      {label:"Who builds it",  value:"Team — using rep's notes, photos, tier confirmation"},
+      {label:"If undecided",   value:"Resend document, follow up in 24 hrs with a direct question"},
+    ],
+    rules:[
+      {type:"green", text:"Get tier confirmation in writing — text is perfectly fine"},
+      {type:"red",   text:"Do not start building the full quote before written confirmation"},
+      {type:"amber", text:"If they can't decide — send document again and ask directly in 24 hrs"},
+    ],
+    script:{label:"After they pick a tier", text:"\"Perfect — I've got you down for the [Tier] package. I'll get the full scope quote over to you within a couple of days. If anything else comes to mind in the meantime, just text me.\""},
+    scripts:null, outcomes:null, tiers:false,
+  },
+  {
+    tag:"Step 7 of 9 — full scope quote",
+    title:"Full scope quote is issued and presented",
+    body:"The team builds the full line-item scope quote from the rep's notes, photos, and confirmed tier. Rep presents it to the customer — walking them through it in person or on a call, not just emailing and hoping. Deposit is asked for on that same call or visit.",
+    type:"normal",
+    details:[
+      {label:"Built by",        value:"Team — rep provides notes, photos, tier confirmation"},
+      {label:"Turnaround",      value:"2–3 business days from tier confirmation"},
+      {label:"How to present",  value:"Walk through live — phone or in person, not just emailed"},
+      {label:"Ask for deposit", value:"Same call or visit as presentation"},
+    ],
+    rules:[
+      {type:"green", text:"Walk the customer through the quote — don't just send and wait"},
+      {type:"green", text:"Ask for the deposit on the same call you present"},
+      {type:"amber", text:"Scope changes go through a formal change order — not casual conversation"},
+      {type:"red",   text:"No start date given without a deposit in hand"},
+    ],
+    script:{label:"Presenting the full quote", text:"\"I've got your full project quote here — let me walk you through it. [walk scope and price]. The deposit to lock in your start date is [amount]. If this all looks right, we can take care of that today and get you on the schedule.\""},
+    scripts:null,
+    outcomes:{
+      yes:{title:"Deposit collected",  body:"Sign the quote. Collect 50% deposit. Hand off to operations. Move to Step 8."},
+      no: {title:"Needs more time",    body:"Leave the document. Set a specific 48-hr follow-up. Flag scope questions to team."},
+    },
+    tiers:false,
+  },
+  {
+    tag:"Step 8 of 9 — production",
+    title:"Project is scheduled and built",
+    body:"Deposit in hand, project gets scheduled. Rep hands off to operations with all notes, photos, and the signed quote. Operations confirms start date within 24 hours. From here the rep stays available for questions but is not managing day-to-day production.",
+    type:"normal",
+    details:[
+      {label:"Rep handoff",      value:"Signed quote + deposit confirmation + all site photos"},
+      {label:"Operations does",  value:"Assigns crew, orders materials, confirms start date"},
+      {label:"Customer gets",    value:"Start date confirmation within 24 hrs of deposit"},
+      {label:"40% payment",      value:"Due when project is 50% complete"},
+    ],
+    rules:[
+      {type:"green", text:"Hand off to operations immediately after deposit — same day"},
+      {type:"green", text:"Stay available if operations has scope questions"},
+      {type:"amber", text:"Any scope changes during production require a written change order"},
+    ],
+    script:null, scripts:null, outcomes:null, tiers:false,
+  },
+  {
+    tag:"Step 9 of 9 — completion",
+    title:"Project completes — close the loop",
+    body:"Job done. Collect the final 10% balance. Then close the loop: ask for a Google review, ask for a referral, and look for cross-sell opportunities across the ReCo ecosystem. Every completed D&B project is also a potential ReTopCo countertop job, a RefreshCo clean, or a future brand touchpoint.",
+    type:"normal",
+    details:[
+      {label:"Final payment",  value:"10% balance due at completion"},
+      {label:"Review ask",     value:"Google review link sent by text immediately"},
+      {label:"Referral ask",   value:"Direct ask — 'do you know anyone thinking about a renovation?'"},
+      {label:"Cross-sell",     value:"ReTopCo · RefreshCo · future ReCo brands"},
+    ],
+    rules:[
+      {type:"green", text:"Always ask for review and referral — every single completed project"},
+      {type:"green", text:"Look for cross-sell to ReTopCo — every D&B project has countertops"},
+      {type:"amber", text:"Get before/after photos for marketing before leaving the site"},
+    ],
+    script:{label:"Referral and review ask", text:"\"Really glad it came out the way you wanted. If you know anyone thinking about a renovation, we'd love the referral. And if you have a moment, a Google review goes a long way — I'll send you the link right now.\""},
+    scripts:null, outcomes:null, tiers:false,
+  },
+];
+
+let cur = 0;
+
+function render() {
+  const s = steps[cur];
+  const total = steps.length;
+
+  let prog = '';
+  for (let i = 0; i < total; i++) {
+    let cls = '';
+    const isGate = steps[i].type === 'gate';
+    if (i < cur)      cls = isGate ? 'gate-done'   : 'done';
+    else if (i === cur) cls = isGate ? 'gate-active' : 'active';
+    prog += `<div class="step-dot ${cls}" onclick="goTo(${i})" title="Step ${i+1}">${i < cur ? '✓' : i+1}</div>`;
+    if (i < total - 1) prog += `<div class="step-line ${i < cur ? 'done' : ''}"></div>`;
+  }
+  document.getElementById('progress').innerHTML = prog;
+
+  const cardEl = document.getElementById('card');
+  let cardClass = 'card';
+  if (s.type === 'gate') cardClass += ' gate-card';
+  if (s.type === 'fork') cardClass += ' fork-card';
+  cardEl.className = cardClass;
+
+  let h = `<div class="step-tag">${s.tag}</div><div class="step-title">${s.title}</div><div class="step-body">${s.body}</div>`;
+
+  if (s.type === 'gate') {
+    h += `<div class="banner amber"><div class="banner-title">Qualification gate</div><div class="banner-body">No site visit is booked until confirmation is received — verbal on the call (Mode A) or written reply (Mode B). This rule protects rep time.</div></div>`;
+  }
+
+  if (s.type === 'fork' && s.fork) {
+    h += `<div class="fork-grid">
+      <div class="fork-inner verbal">
+        <div class="fork-trigger">Trigger — ${s.fork.verbal.trigger}</div>
+        <div class="fork-title">${s.fork.verbal.title}</div>
+        <div class="fork-body">${s.fork.verbal.body}</div>
+      </div>
+      <div class="fork-inner document">
+        <div class="fork-trigger">Trigger — ${s.fork.document.trigger}</div>
+        <div class="fork-title">${s.fork.document.title}</div>
+        <div class="fork-body">${s.fork.document.body}</div>
+      </div>
+    </div>`;
+  }
+
+  if (s.tiers) {
+    h += `<div class="tier-row">
+      <div class="tier-card t1"><div class="tier-name">Refresh</div><div class="tier-range">$8k–$18k</div><div class="tier-desc">Paint, LVP, cabinet paint, fixtures, trim, basic bath refresh</div></div>
+      <div class="tier-card t2"><div class="tier-name">Renovate</div><div class="tier-range">$18k–$45k</div><div class="tier-desc">Refresh + countertops, vanities, doors, plumbing fixtures, exterior</div></div>
+      <div class="tier-card t3"><div class="tier-name">Transform</div><div class="tier-range">$45k+</div><div class="tier-desc">Full gut, custom design per property layout, all trades</div></div>
+    </div>`;
+  }
+
+  if (s.details) {
+    h += '<div class="detail-grid">';
+    s.details.forEach(d => {
+      h += `<div class="detail-card"><div class="detail-label">${d.label}</div><div class="detail-value">${d.value}</div></div>`;
+    });
+    h += '</div>';
+  }
+
+  if (s.scripts) {
+    h += '<div class="scripts-wrap">';
+    s.scripts.forEach(sc => {
+      h += `<div class="script-box"><div class="script-label">${sc.label}</div><div class="script-text">${sc.text}</div></div>`;
+    });
+    h += '</div>';
+  } else if (s.script) {
+    h += `<div class="script-box"><div class="script-label">${s.script.label}</div><div class="script-text">${s.script.text}</div></div>`;
+  }
+
+  if (s.rules && s.rules.length) {
+    h += '<div class="rules">';
+    s.rules.forEach(r => {
+      h += `<div class="rule-row"><div class="rule-dot ${r.type}"></div><span>${r.text}</span></div>`;
+    });
+    h += '</div>';
+  }
+
+  if (s.outcomes) {
+    h += '<div class="outcome-row">';
+    if (s.outcomes.yes) h += `<div class="outcome-card yes"><div class="outcome-title">${s.outcomes.yes.title}</div><div class="outcome-body">${s.outcomes.yes.body}</div></div>`;
+    if (s.outcomes.no)  h += `<div class="outcome-card no"><div class="outcome-title">${s.outcomes.no.title}</div><div class="outcome-body">${s.outcomes.no.body}</div></div>`;
+    h += '</div>';
+  }
+
+  const isLast = cur === total - 1;
+  h += `<div class="nav">
+    <button class="nav-btn" onclick="goTo(${cur-1})" ${cur===0?'disabled':''}>← Previous</button>
+    <span class="step-counter">${cur+1} / ${total}</span>
+    <button class="nav-btn ${isLast?'':'primary'}" onclick="goTo(${cur+1})" ${isLast?'disabled':''}>
+      ${isLast ? 'Complete' : 'Next →'}
+    </button>
+  </div>`;
+
+  cardEl.innerHTML = h;
+}
+
+function goTo(i) {
+  if (i < 0 || i >= steps.length) return;
+  cur = i;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

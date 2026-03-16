@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReFloorCo — Productized Services Flow</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #f8f7f4;
+    --surface:   #ffffff;
+    --border:    #e4e1da;
+    --border-md: #c8c4bc;
+    --text:      #1a1a18;
+    --text-2:    #5a5a56;
+    --text-3:    #9a9994;
+    --dark:      #1c1c1c;
+    --teal-bg:   #e1f5ee;
+    --teal-bd:   #5dcaa5;
+    --teal-tx:   #085041;
+    --green-bg:  #eaf3de;
+    --green-bd:  #97c459;
+    --green-tx:  #27500a;
+    --amber-bg:  #faeeda;
+    --amber-bd:  #ef9f27;
+    --amber-tx:  #412402;
+    --red-bg:    #fcebeb;
+    --red-bd:    #f09595;
+    --red-tx:    #791f1f;
+    --radius:    10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap');
+
+  /* Header */
+  .header {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { font-size: 13px; font-weight: 500; color: var(--text-3); letter-spacing: .06em; text-transform: uppercase; }
+  .doc-title { font-size: 13px; color: var(--text-2); }
+
+  /* Progress */
+  .progress-wrap { width: 100%; max-width: 680px; margin-bottom: 1.5rem; }
+  .progress { display: flex; align-items: center; gap: 0; }
+  .step-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; flex-shrink: 0;
+    cursor: pointer; transition: all .2s;
+    border: 1px solid var(--border-md);
+    background: var(--surface); color: var(--text-3);
+  }
+  .step-dot:hover { border-color: var(--text-3); color: var(--text-2); }
+  .step-dot.active { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .step-dot.done { background: var(--green-bg); border-color: var(--green-bd); color: var(--green-tx); }
+  .step-line { flex: 1; height: 1px; background: var(--border); transition: background .3s; }
+  .step-line.done { background: var(--green-bd); }
+
+  /* Card */
+  .card {
+    width: 100%; max-width: 680px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    animation: fadeIn .25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-tag { font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .step-title { font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 10px; line-height: 1.25; }
+  .step-body { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 1.25rem; }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  .detail-card { background: var(--bg); border-radius: var(--radius); padding: 10px 12px; border: 1px solid var(--border); }
+  .detail-label { font-size: 10px; color: var(--text-3); font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+  .detail-value { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.4; }
+
+  .script-box { background: var(--dark); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 1.25rem; }
+  .script-label { font-size: 10px; color: #777; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .script-text { font-size: 13px; color: #d8d6d0; line-height: 1.65; font-style: italic; }
+
+  .rules { margin-bottom: 1.25rem; }
+  .rule-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-2); line-height: 1.5; }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .rule-dot.green { background: #639922; }
+  .rule-dot.red   { background: #e24b4a; }
+  .rule-dot.amber { background: #ba7517; }
+
+  .outcome-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  .outcome-card { border-radius: var(--radius); padding: 12px 14px; border: 1px solid; }
+  .outcome-card.yes { background: var(--green-bg); border-color: var(--green-bd); }
+  .outcome-card.no  { background: var(--red-bg);   border-color: var(--red-bd); }
+  .outcome-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+  .outcome-card.yes .outcome-title { color: var(--green-tx); }
+  .outcome-card.no  .outcome-title { color: var(--red-tx); }
+  .outcome-body { font-size: 12px; line-height: 1.55; }
+  .outcome-card.yes .outcome-body { color: #3b6d11; }
+  .outcome-card.no  .outcome-body { color: #a32d2d; }
+
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .nav-btn {
+    font-size: 13px; font-weight: 500; padding: 7px 18px;
+    border-radius: var(--radius); cursor: pointer;
+    background: transparent; border: 1px solid var(--border-md);
+    color: var(--text); transition: all .15s; font-family: inherit;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--bg); border-color: var(--text-3); }
+  .nav-btn:active:not(:disabled) { transform: scale(.98); }
+  .nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .nav-btn.primary { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .nav-btn.primary:hover { background: #333; }
+  .step-counter { font-size: 12px; color: var(--text-3); font-family: 'DM Mono', monospace; }
+</style>
+</head>
+<body><div style="background:#1c1c1c;padding:.75rem 1.25rem;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100"><a href="/index.html" style="color:#9fe1cb;font-size:14px;font-weight:500;text-decoration:none">‹ Home</a><span style="font-size:15px;font-weight:600;color:#fff;flex:1">Productized flow</span></div>
+
+<div class="header">
+  <span class="brand">ReFloorCo — A ReCo Group Company</span>
+  <span class="doc-title">Productized Services Flow</span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress" id="progress"></div>
+</div>
+
+<div class="card" id="card"></div>
+
+<script>
+const steps = [
+  {
+    tag: "Step 1 of 7 — lead comes in",
+    title: "Rep gets a lead",
+    body: "A productized lead is someone who needs one specific service — not a full renovation. They say something like 'I need my floors done' or 'I want to paint my garage floor.' The rep's first job is to confirm it's a productized service and book the visit.",
+    details: [
+      { label: "Lead sources", value: "Door knock, inbound call, referral, form submission" },
+      { label: "Service types", value: "LVP · Interior paint · Epoxy · Cabinet paint · Exterior paint" },
+      { label: "Rep action", value: "Confirm service type, schedule property visit" },
+      { label: "Timeline", value: "Same day or next business day" },
+    ],
+    rules: [
+      { type: "green", text: "Confirm the service type before booking the visit" },
+      { type: "green", text: "If they mention kitchen or bathroom renovation — route to D&B track instead" },
+      { type: "amber", text: "Investor with multiple units? Use the Rental Turn track, not productized" },
+    ],
+    script: null,
+    outcomes: null,
+  },
+  {
+    tag: "Step 2 of 7 — at the property",
+    title: "Rep visits and measures",
+    body: "The rep shows up to the property with the productized quote sheet. First thing they do is measure. Square footage is the basis for every calculation — never use the customer's estimate. Measure it yourself.",
+    details: [
+      { label: "What to measure", value: "Square footage of every area the service covers" },
+      { label: "Tool needed", value: "Tape measure or laser measure" },
+      { label: "For cabinet paint", value: "Count doors and drawers, not sq ft" },
+      { label: "For exterior paint", value: "Estimate linear footage of body + trim" },
+    ],
+    rules: [
+      { type: "green", text: "Always measure yourself — never trust the customer's number" },
+      { type: "green", text: "Take photos of every area you're quoting" },
+      { type: "red", text: "Never write a total without confirming sq ft or door count first" },
+    ],
+    script: { label: "Opening at the property", text: "\"Before I put together your quote I want to walk through and get the exact measurements — that way the number I give you is accurate and there are no surprises.\"" },
+    outcomes: null,
+  },
+  {
+    tag: "Step 3 of 7 — quote calculation",
+    title: "Fill out the quote on-site",
+    body: "With measurements in hand, the rep fills out the productized quote form right there. Service name, area or quantity, selected tier, and total. The math is done in front of the customer — no mystery, no waiting.",
+    details: [
+      { label: "LVP flooring", value: "$3.25 / $4.25 / $5.50+ per sq ft" },
+      { label: "Interior paint", value: "$1.75 / $2.50 / $2.25 per sq ft" },
+      { label: "Epoxy floors", value: "$3.00 / $4.50 / $6.50+ per sq ft" },
+      { label: "Cabinet paint", value: "$50/door · $950+ kitchen · $1,400+ premium" },
+    ],
+    rules: [
+      { type: "green", text: "Show the math openly — calculate in front of the customer" },
+      { type: "green", text: "If quoting multiple services, line-item each one separately" },
+      { type: "amber", text: "If sq ft is above 2,000, call the office to confirm pricing before writing the total" },
+      { type: "red", text: "Never quote outside the pricing reference — no freelancing numbers" },
+    ],
+    script: { label: "Presenting the price", text: "\"So based on [X] sq ft, you're looking at [price] for the [service]. That includes [key inclusions]. The 50% deposit to lock in your start date would be [deposit amount].\"" },
+    outcomes: null,
+  },
+  {
+    tag: "Step 4 of 7 — the close",
+    title: "Ask for the deposit",
+    body: "This is the most important moment. The rep fills in the deposit line, flips the quote to the customer, and asks directly. Don't trail off. Don't say 'whenever you're ready.' Ask for it clearly. Every visit ends with either a deposit or a specific follow-up plan.",
+    details: [
+      { label: "Deposit amount", value: "50% of project total" },
+      { label: "Payment methods", value: "Card, check, Zelle, cash" },
+      { label: "What deposit does", value: "Locks in start date, triggers scheduling" },
+      { label: "If they need to think", value: "Set a specific 24-hr follow-up — not 'get back to me'" },
+    ],
+    rules: [
+      { type: "green", text: "Ask for the deposit on every single visit — no exceptions" },
+      { type: "green", text: "If they say yes — collect payment before leaving the property" },
+      { type: "amber", text: "If they say 'I need to think' — leave the quote, set a 24-hr follow-up time" },
+      { type: "red", text: "Never promise a start date without a deposit in hand" },
+    ],
+    script: { label: "Asking for the deposit", text: "\"To get you on the schedule, I just need the 50% deposit today — that's [amount]. We can do card, check, or Zelle. Want to go ahead and lock in your date?\"" },
+    outcomes: {
+      yes: { title: "Customer says yes", body: "Collect deposit. Have them sign the quote. Move to Step 5." },
+      no:  { title: "Customer needs to think", body: "Leave the document. Set exact follow-up: 'I'll call you tomorrow at [time].' Move to follow-up step." },
+    },
+  },
+  {
+    tag: "Step 5 of 7 — document send",
+    title: "Email and text the signed quote",
+    body: "Once the deposit is collected and the quote is signed, the rep sends the customer a copy — both email and text. The email uses the productized quote email template. The text is the PDF attachment. This creates a paper trail and gives the customer something to reference.",
+    details: [
+      { label: "Email subject", value: "Your ReFloorCo Quote — [Service] at [Address]" },
+      { label: "Attachment", value: "Signed quote PDF" },
+      { label: "Also text", value: "PDF + 'Got you scheduled — confirmation coming shortly'" },
+      { label: "Timeline", value: "Same day, before end of business" },
+    ],
+    rules: [
+      { type: "green", text: "Always send both email and text — customers check different things" },
+      { type: "green", text: "Use the exact email template from the field guide" },
+      { type: "red", text: "Never skip sending the document — verbal agreement is not enough" },
+    ],
+    script: { label: "Text message after sending", text: "\"Hey [Name], just sent your quote over to [email]. Here's the PDF copy as well. We'll follow up with your confirmed start date within 24 hours. Looking forward to it!\"" },
+    outcomes: null,
+  },
+  {
+    tag: "Step 6 of 7 — scheduling",
+    title: "Operations schedules the project",
+    body: "The rep hands off to operations. Deposit received triggers the scheduling process. The customer gets a confirmed start date within 24 hours of deposit. From this point the rep's job is done for this project — unless there are change orders or follow-up questions.",
+    details: [
+      { label: "Rep hands off", value: "Signed quote + deposit confirmation + property photos" },
+      { label: "Operations does", value: "Confirms start date, assigns crew, orders materials" },
+      { label: "Customer receives", value: "Start date confirmation within 24 hrs" },
+      { label: "Payment remaining", value: "50% balance due upon completion" },
+    ],
+    rules: [
+      { type: "green", text: "Send photos, measurements, and all notes to operations at handoff" },
+      { type: "green", text: "Stay available if operations has questions about the scope" },
+      { type: "amber", text: "Any scope changes after scheduling require a written change order" },
+    ],
+    script: null,
+    outcomes: null,
+  },
+  {
+    tag: "Step 7 of 7 — after completion",
+    title: "Project completes — close the loop",
+    body: "When the job is done, the 50% balance is collected and the rep has one final job: close the loop with the customer. Ask for a review. Ask for a referral. And look for the cross-sell opportunity — does this customer also need countertops, cleaning, or another ReCo service?",
+    details: [
+      { label: "Final payment", value: "50% balance due upon completion" },
+      { label: "Review ask", value: "Google review via text — send the link directly" },
+      { label: "Referral ask", value: "\"Do you know anyone else who could use this service?\"" },
+      { label: "Cross-sell", value: "ReTopCo countertops · RefreshCo cleaning · D&B upsell" },
+    ],
+    rules: [
+      { type: "green", text: "Always ask for a review and referral — every completed project" },
+      { type: "green", text: "Look for cross-sell opportunities within the ReCo ecosystem" },
+      { type: "amber", text: "Document before/after photos for marketing before leaving the site" },
+    ],
+    script: { label: "Referral ask", text: "\"Really glad it came out great. If you know anyone else who needs flooring, paint, or any home work done — we'd love the referral. I'll send you a Google review link too if you don't mind leaving us a quick note.\"" },
+    outcomes: null,
+  },
+];
+
+let current = 0;
+
+function render() {
+  const s = steps[current];
+  const total = steps.length;
+
+  let prog = '';
+  for (let i = 0; i < total; i++) {
+    const cls = i < current ? 'done' : i === current ? 'active' : '';
+    prog += `<div class="step-dot ${cls}" onclick="goTo(${i})" title="Step ${i+1}">${i < current ? '✓' : i + 1}</div>`;
+    if (i < total - 1) prog += `<div class="step-line ${i < current ? 'done' : ''}"></div>`;
+  }
+  document.getElementById('progress').innerHTML = prog;
+
+  let html = `<div class="step-tag">${s.tag}</div><div class="step-title">${s.title}</div><div class="step-body">${s.body}</div>`;
+
+  if (s.details) {
+    html += '<div class="detail-grid">';
+    s.details.forEach(d => {
+      html += `<div class="detail-card"><div class="detail-label">${d.label}</div><div class="detail-value">${d.value}</div></div>`;
+    });
+    html += '</div>';
+  }
+
+  if (s.script) {
+    html += `<div class="script-box"><div class="script-label">${s.script.label}</div><div class="script-text">${s.script.text}</div></div>`;
+  }
+
+  if (s.rules && s.rules.length) {
+    html += '<div class="rules">';
+    s.rules.forEach(r => {
+      html += `<div class="rule-row"><div class="rule-dot ${r.type}"></div><span>${r.text}</span></div>`;
+    });
+    html += '</div>';
+  }
+
+  if (s.outcomes) {
+    html += `<div class="outcome-row">
+      <div class="outcome-card yes"><div class="outcome-title">${s.outcomes.yes.title}</div><div class="outcome-body">${s.outcomes.yes.body}</div></div>
+      <div class="outcome-card no"><div class="outcome-title">${s.outcomes.no.title}</div><div class="outcome-body">${s.outcomes.no.body}</div></div>
+    </div>`;
+  }
+
+  const isLast = current === total - 1;
+  html += `<div class="nav">
+    <button class="nav-btn" onclick="goTo(${current - 1})" ${current === 0 ? 'disabled' : ''}>← Previous</button>
+    <span class="step-counter">${current + 1} / ${total}</span>
+    <button class="nav-btn ${isLast ? 'primary' : ''}" onclick="goTo(${current + 1})" ${isLast ? 'disabled' : ''}>
+      ${isLast ? 'Complete' : 'Next →'}
+    </button>
+  </div>`;
+
+  document.getElementById('card').innerHTML = html;
+}
+
+function goTo(i) {
+  if (i < 0 || i >= steps.length) return;
+  current = i;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

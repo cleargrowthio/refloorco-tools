@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Field Guide — ReFloorCo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f8f7f4;--surface:#fff;--dark:#1c1c1c;--text:#1a1a18;--text2:#5a5a56;--text3:#9a9994;--border:#e4e1da;--border2:#c8c4bc;--r:12px;--r-sm:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2rem}
+.topbar{background:#BA7517;padding:.875rem 1.25rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.back{color:#FAEEDA;font-size:14px;font-weight:500;text-decoration:none}
+.topbar-title{font-size:15px;font-weight:600;color:#fff}
+.body{padding:1rem 1.25rem}
+.section-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin:1.5rem 0 10px}
+.section-label:first-child{margin-top:0}
+
+.script-card{background:var(--dark);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
+.script-situation{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.script-text{font-size:13px;color:#d8d6d0;line-height:1.65;font-style:italic}
+
+.dd-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1rem}
+.dd-head{display:grid;grid-template-columns:1fr 1fr}
+.dd-col-header{padding:8px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border)}
+.dd-col-header.do{color:#27500A;background:#EAF3DE}
+.dd-col-header.dont{color:#791F1F;background:#FCEBEB}
+.dd-rows{display:grid;grid-template-columns:1fr 1fr}
+.dd-cell{padding:9px 12px;font-size:12px;line-height:1.5;border-bottom:1px solid var(--border)}
+.dd-cell:last-child,.dd-cell:nth-last-child(2){border-bottom:none}
+.dd-cell.do{color:#3B6D11;background:#F5FBF0;border-right:1px solid var(--border)}
+.dd-cell.dont{color:#A32D2D;background:#FFF7F7}
+
+.email-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.email-header{background:#1c1c1c;padding:10px 14px}
+.email-type{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.email-subject{font-size:13px;font-weight:600;color:#fff}
+.email-body{padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.65}
+.email-body p{margin-bottom:8px}
+.email-body p:last-child{margin-bottom:0}
+
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.rule-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.5}
+.rule-row:last-child{border-bottom:none}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dot.g{background:#639922}.dot.r{background:#E24B4A}.dot.a{background:#BA7517}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="back" href="/index.html">‹ Home</a>
+  <div class="topbar-title">Rep field guide</div>
+</div>
+<div class="body">
+
+<div class="section-label">Scripts — word for word</div>
+
+<div class="script-card">
+  <div class="script-situation">Qualifying the lead</div>
+  <div class="script-text">"Is it one specific thing like flooring or paint, or are you thinking about a bigger renovation?"</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Verbal prelim (D&B — on the call)</div>
+  <div class="script-text">"Based on what you're describing, you're probably looking somewhere in the range of [low] to [high] depending on the level of finish. Does that range work for your budget?"</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Sending the prelim document</div>
+  <div class="script-text">"Let me send you a written breakdown so you have something to reference. I'll get that over in the next hour — once you've had a chance to look it over, just reply and we'll get a walkthrough on the calendar."</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Presenting the price (productized)</div>
+  <div class="script-text">"Based on [X] sq ft, you're looking at [price] for the [service]. That includes [key inclusions]. The 50% deposit to lock in your start date would be [deposit amount]."</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Asking for the deposit</div>
+  <div class="script-text">"To get you on the schedule, I just need the 50% deposit today — that's [amount]. We can do card, check, or Zelle. Want to go ahead and lock in your date?"</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Customer says 'I need to think about it'</div>
+  <div class="script-text">"Totally understand. I'll leave this with you. Our schedule fills up fast — if you want to hold a spot, even just the deposit gets you in line. I'll follow up tomorrow at [time]."</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Presenting D&B tiers</div>
+  <div class="script-text">"We have three renovation levels. Refresh is cosmetic — floors, paint, cabinets, fixtures. Renovate adds countertops, vanities, doors, exterior. Transform is a full gut we design custom for your layout. Based on what you showed me, I think [tier] is the right fit — but look at all three."</div>
+</div>
+<div class="script-card">
+  <div class="script-situation">Referral + review ask</div>
+  <div class="script-text">"Really glad it came out the way you wanted. If you know anyone thinking about a renovation, we'd love the referral. I'll send you a Google review link right now."</div>
+</div>
+
+<div class="section-label">Do this / never do this</div>
+<div class="dd-block">
+  <div class="dd-head">
+    <div class="dd-col-header do">Do this</div>
+    <div class="dd-col-header dont">Never do this</div>
+  </div>
+  <div class="dd-rows">
+    <div class="dd-cell do">Send prelim same day as first contact</div>
+    <div class="dd-cell dont">Visit a D&B property before they reply</div>
+    <div class="dd-cell do">Measure sq ft yourself on-site</div>
+    <div class="dd-cell dont">Quote D&B projects with a specific number on-site</div>
+    <div class="dd-cell do">Ask for the deposit every single visit</div>
+    <div class="dd-cell dont">Make up prices outside the pricing reference</div>
+    <div class="dd-cell do">Follow up once, then archive if no reply</div>
+    <div class="dd-cell dont">Leave a property without asking for the deposit</div>
+    <div class="dd-cell do">Send quote as PDF — email and text both</div>
+    <div class="dd-cell dont">Promise a start date without a deposit</div>
+    <div class="dd-cell do">Take photos at every property visit</div>
+    <div class="dd-cell dont">Give verbal change orders or scope changes</div>
+  </div>
+</div>
+
+<div class="section-label">Email templates</div>
+
+<div class="email-card">
+  <div class="email-header">
+    <div class="email-type">Prelim estimate send</div>
+    <div class="email-subject">ReFloorCo — Preliminary Estimate for [Address]</div>
+  </div>
+  <div class="email-body">
+    <p>Hi [First Name],</p>
+    <p>Great speaking with you. I've attached a preliminary estimate for the work we discussed at [Address]. This gives you a rough budget range by trade — it's not a final quote, just a starting point before we do a full walkthrough.</p>
+    <p>Take a look and reply to let me know if the numbers are in the right range. Once I hear back I'll reach out to schedule a visit.</p>
+    <p>Any questions, just reply here or text me directly.</p>
+    <p>[Your Name] · ReFloorCo · [Phone]</p>
+  </div>
+</div>
+
+<div class="email-card">
+  <div class="email-header">
+    <div class="email-type">Productized quote send</div>
+    <div class="email-subject">Your ReFloorCo Quote — [Service] at [Address]</div>
+  </div>
+  <div class="email-body">
+    <p>Hi [First Name],</p>
+    <p>Attached is your quote for [service] at [address]. The total is [price] with a 50% deposit of [deposit] to lock in your start date.</p>
+    <p>To move forward, sign the attached quote and send the deposit via [payment method]. We'll confirm your start date within 24 hours.</p>
+    <p>[Your Name] · ReFloorCo · [Phone]</p>
+  </div>
+</div>
+
+<div class="email-card">
+  <div class="email-header">
+    <div class="email-type">D&B tier presentation</div>
+    <div class="email-subject">ReFloorCo Design &amp; Build — Your Options for [Address]</div>
+  </div>
+  <div class="email-body">
+    <p>Hi [First Name],</p>
+    <p>Great meeting you at the property. I've attached our Design &amp; Build options for [address]. You'll see three tiers — Refresh, Renovate, and Transform — with a full breakdown of what's included and typical investment ranges.</p>
+    <p>Based on our walkthrough, I think [tier recommendation] is probably the right fit — but take a look at all three and let me know which direction feels right. Once you confirm the tier, I'll have the full scope quote put together for you.</p>
+    <p>[Your Name] · ReFloorCo · [Phone]</p>
+  </div>
+</div>
+
+<div class="section-label">Payment schedule (always)</div>
+<div class="rule-card">
+  <div class="rule-row"><div class="dot g"></div><span><strong>50%</strong> — deposit due 2 days before start date. No deposit = no scheduling.</span></div>
+  <div class="rule-row"><div class="dot a"></div><span><strong>40%</strong> — due when project is 50% complete. Due end of day.</span></div>
+  <div class="rule-row"><div class="dot g"></div><span><strong>10%</strong> — due within 3 days of project completion.</span></div>
+  <div class="rule-row"><div class="dot r"></div><span>Late payments: work suspended + 20% late fee after day 3.</span></div>
+</div>
+
+</div>
+</body>
+</html>

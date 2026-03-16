@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Quote Calculator — ReFloorCo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f8f7f4;--surface:#fff;--dark:#1c1c1c;
+  --text:#1a1a18;--text2:#5a5a56;--text3:#9a9994;
+  --border:#e4e1da;--border2:#c8c4bc;
+  --teal:#0F6E56;--teal-bg:#e1f5ee;--teal-bd:#5DCAA5;--teal-tx:#085041;
+  --green-bg:#EAF3DE;--green-bd:#97C459;--green-tx:#27500A;--green-mid:#3B6D11;
+  --amber-bg:#FAEEDA;--amber-tx:#412402;
+  --red-bg:#fcebeb;--red-bd:#f09595;--red-tx:#791f1f;--red-mid:#A32D2D;
+  --r:12px;--r-sm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:100px}
+.topbar{background:var(--dark);padding:.875rem 1.25rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.back{color:#9fe1cb;font-size:14px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:600;color:#fff;flex:1}
+.topbar-sub{font-size:11px;color:#888;text-align:right;flex-shrink:0}
+
+.page{padding:1rem 1.25rem;display:none}
+.page.active{display:block}
+
+.section-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin:1.25rem 0 8px}
+.section-label:first-child{margin-top:0}
+
+input[type=text],input[type=email],input[type=tel],input[type=number]{
+  font-family:inherit;font-size:14px;padding:10px 12px;border-radius:var(--r-sm);
+  border:1px solid var(--border2);background:var(--surface);color:var(--text);
+  width:100%;outline:none;transition:border-color .15s;-webkit-appearance:none;
+}
+input:focus{border-color:#1D9E75}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.input-full{margin-bottom:8px}
+
+.svc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.svc-card.on{border-color:var(--teal-bd);border-width:1.5px}
+.svc-header{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;-webkit-user-select:none}
+.svc-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:var(--surface)}
+.svc-card.on .svc-check{background:var(--teal);border-color:var(--teal)}
+.chk-svg{display:none}
+.svc-card.on .chk-svg{display:block}
+.svc-name{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.svc-amt{font-size:14px;font-weight:600;color:var(--text3)}
+.svc-card.on .svc-amt{color:var(--teal)}
+
+.svc-body{padding:0 14px 14px;display:none}
+.svc-card.on .svc-body{display:block}
+
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.tier-btn{padding:8px 4px;font-size:12px;font-weight:600;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;text-align:center;transition:all .15s;font-family:inherit;line-height:1.3}
+.tier-btn.sel{background:var(--dark);border-color:var(--dark);color:#fff}
+.tier-rate{font-size:10px;font-weight:400;display:block;margin-top:2px;opacity:.75}
+
+.qty-wrap{display:flex;align-items:center;gap:10px}
+.qty-wrap label{font-size:13px;color:var(--text2);flex:1}
+.qty-wrap input{width:100px;text-align:right}
+.qty-wrap .unit{font-size:12px;color:var(--text3);white-space:nowrap}
+.flat-note{font-size:13px;color:var(--text2);padding:4px 0}
+
+.sticky-total{position:sticky;bottom:0;background:var(--dark);padding:12px 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.total-info .lbl{font-size:11px;color:#888;margin-bottom:1px}
+.total-info .amt{font-size:20px;font-weight:700;color:#fff}
+.total-info .dep{font-size:12px;color:#9fe1cb;margin-top:1px}
+.action-btns{display:flex;gap:8px}
+.abtn{padding:10px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;white-space:nowrap;transition:all .15s}
+.abtn:active{transform:scale(.97)}
+.abtn.show{background:#1D9E75;color:#fff}
+.abtn.send{background:#fff;color:var(--dark)}
+
+/* Customer view */
+.cv-hero{text-align:center;padding:2rem 1rem 1.5rem}
+.cv-name{font-size:17px;font-weight:600;color:var(--text);margin-bottom:3px}
+.cv-addr{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
+.cv-lbl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.cv-total{font-size:52px;font-weight:700;color:var(--text);line-height:1}
+.cv-deposit{font-size:16px;color:var(--text2);margin-top:8px}
+
+.li-table{border-top:1px solid var(--border);margin-top:1rem}
+.li-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.li-left .li-name{font-weight:500;color:var(--text)}
+.li-left .li-tier{font-size:12px;color:var(--text3);margin-top:1px}
+.li-val{font-weight:600;color:var(--text)}
+
+.fin-section{margin-top:1.5rem}
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.fin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 6px;text-align:center}
+.fin-mo{font-size:18px;font-weight:700;color:var(--text)}
+.fin-payment{font-size:12px;color:var(--text2);margin-top:2px}
+.fin-note{font-size:10px;color:var(--text3);margin-top:2px}
+
+.pay-sched{margin-top:1.5rem}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.pay-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 8px;text-align:center}
+.pay-pct{font-size:22px;font-weight:700;color:var(--text)}
+.pay-lbl{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px}
+.pay-when{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* Send view */
+.send-summary{background:var(--bg);border-radius:var(--r-sm);padding:12px;margin-bottom:1rem;border:1px solid var(--border)}
+.send-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.send-row:last-child{border-bottom:none}
+.send-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.send-info{flex:1}
+.send-title{font-size:15px;font-weight:600;color:var(--text)}
+.send-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.send-btn-row{margin-top:1.5rem}
+.wide-btn{display:block;width:100%;padding:14px;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:inherit;text-align:center;margin-bottom:8px;transition:all .15s}
+.wide-btn:active{transform:scale(.99)}
+.wide-btn.dark{background:var(--dark);color:#fff}
+.wide-btn.outline{background:var(--surface);color:var(--text);border:1.5px solid var(--border2)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="/index.html">‹ Home</a>
+  <div class="topbar-title">Quote calculator</div>
+  <div class="topbar-sub" id="topbar-total">$0</div>
+</div>
+
+<!-- PAGE: BUILDER -->
+<div class="page active" id="page-build">
+
+  <div class="section-label">Customer info</div>
+  <div class="input-row">
+    <input type="text" id="cname" placeholder="Customer name" oninput="update()">
+    <input type="tel"  id="cphone" placeholder="Phone number">
+  </div>
+  <div class="input-full">
+    <input type="text" id="caddr" placeholder="Property address" oninput="update()">
+  </div>
+  <div class="input-full">
+    <input type="email" id="cemail" placeholder="Email address">
+  </div>
+
+  <div class="section-label">Services</div>
+  <div id="svc-list"></div>
+
+  <div style="height:80px"></div>
+</div>
+
+<!-- PAGE: CUSTOMER VIEW -->
+<div class="page" id="page-customer">
+  <div class="cv-hero">
+    <div class="cv-name" id="cv-name">—</div>
+    <div class="cv-addr" id="cv-addr">—</div>
+    <div class="cv-lbl">Project total</div>
+    <div class="cv-total" id="cv-total">$0</div>
+    <div class="cv-deposit" id="cv-deposit">$0 deposit to get started</div>
+  </div>
+
+  <div class="li-table" id="cv-lines"></div>
+
+  <div class="fin-section">
+    <div class="section-label">Financing options</div>
+    <div class="fin-grid" id="cv-fin"></div>
+  </div>
+
+  <div class="pay-sched">
+    <div class="section-label">Payment schedule</div>
+    <div class="pay-grid">
+      <div class="pay-card"><div class="pay-pct">50%</div><div class="pay-lbl">Deposit</div><div class="pay-when">Due at signing</div></div>
+      <div class="pay-card"><div class="pay-pct">40%</div><div class="pay-lbl">Progress</div><div class="pay-when">At 50% complete</div></div>
+      <div class="pay-card"><div class="pay-pct">10%</div><div class="pay-lbl">Final</div><div class="pay-when">At completion</div></div>
+    </div>
+  </div>
+
+  <div style="height:80px"></div>
+</div>
+
+<!-- PAGE: SEND VIEW -->
+<div class="page" id="page-send">
+  <div class="section-label">Quote summary</div>
+  <div class="send-summary" id="send-summary"></div>
+
+  <div class="section-label">Send to customer</div>
+
+  <div class="send-row">
+    <div class="send-icon" style="background:#E6F1FB">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#0C447C" stroke-width="1.8"/><path d="M2 7l10 7 10-7" stroke="#0C447C" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+    <div class="send-info">
+      <div class="send-title">Email quote</div>
+      <div class="send-sub" id="send-email-val">—</div>
+    </div>
+  </div>
+
+  <div class="send-row">
+    <div class="send-icon" style="background:#EAF3DE">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M8 12h8M8 8h5" stroke="#27500A" stroke-width="1.8" stroke-linecap="round"/><path d="M4 4h16a1 1 0 011 1v10a1 1 0 01-1 1H8l-4 4V5a1 1 0 011-1z" stroke="#27500A" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="send-info">
+      <div class="send-title">Text quote PDF</div>
+      <div class="send-sub" id="send-phone-val">—</div>
+    </div>
+  </div>
+
+  <div class="send-row">
+    <div class="send-icon" style="background:#FAEEDA">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#412402" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="#412402" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+    <div class="send-info">
+      <div class="send-title">Set 24-hr follow-up</div>
+      <div class="send-sub">If no deposit collected today</div>
+    </div>
+  </div>
+
+  <div class="send-btn-row">
+    <button class="wide-btn dark" onclick="newQuote()">Start new quote</button>
+    <button class="wide-btn outline" onclick="goPage('page-build')">Edit this quote</button>
+  </div>
+
+  <div style="height:80px"></div>
+</div>
+
+<!-- STICKY TOTAL BAR -->
+<div class="sticky-total" id="sticky-total">
+  <div class="total-info">
+    <div class="lbl">Project total</div>
+    <div class="amt" id="sticky-amt">$0</div>
+    <div class="dep" id="sticky-dep">$0 deposit</div>
+  </div>
+  <div class="action-btns">
+    <button class="abtn show" onclick="showCustomer()">Show customer</button>
+    <button class="abtn send" onclick="showSend()">Send quote</button>
+  </div>
+</div>
+
+<script>
+const SVCS = [
+  {id:'lvp',  name:'LVP Flooring',   unit:'sq ft', flatOnly:false, flatTiers:[],
+   tiers:[{l:'Standard',r:3.25,d:'$3.25/sqft'},{l:'Mid-grade',r:4.25,d:'$4.25/sqft'},{l:'Premium',r:5.50,d:'$5.50+/sqft'}]},
+  {id:'paint',name:'Interior Paint', unit:'sq ft', flatOnly:false, flatTiers:[],
+   tiers:[{l:'Walls only',r:1.75,d:'$1.75/sqft'},{l:'Full room',r:2.50,d:'$2.50/sqft'},{l:'Full home',r:2.25,d:'$2.25/sqft'}]},
+  {id:'epoxy',name:'Epoxy Floors',   unit:'sq ft', flatOnly:false, flatTiers:[],
+   tiers:[{l:'Solid color',r:3.00,d:'$3.00/sqft'},{l:'Full chip',r:4.50,d:'$4.50/sqft'},{l:'Metallic',r:6.50,d:'$6.50+/sqft'}]},
+  {id:'cab',  name:'Cabinet Paint',  unit:'doors', flatOnly:false, flatTiers:[1,2],
+   tiers:[{l:'Per door',r:50,d:'$50/door'},{l:'Full kitchen',r:950,d:'$950+ flat'},{l:'Premium',r:1400,d:'$1,400+ flat'}]},
+  {id:'ext',  name:'Exterior Paint', unit:'flat',  flatOnly:true,  flatTiers:[0,1,2],
+   tiers:[{l:'Body only',r:1800,d:'$1,800+ flat'},{l:'Body+trim',r:2800,d:'$2,800+ flat'},{l:'Full pkg',r:3600,d:'$3,600+ flat'}]},
+];
+
+const state = {};
+SVCS.forEach(s => { state[s.id] = {on:false, tier:0, qty:0}; });
+
+function isFlat(svc) {
+  return svc.flatOnly || svc.flatTiers.includes(state[svc.id].tier);
+}
+
+function svcTotal(svc) {
+  const st = state[svc.id];
+  if (!st.on) return 0;
+  if (isFlat(svc)) return svc.tiers[st.tier].r;
+  return Math.round(st.qty * svc.tiers[st.tier].r);
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function renderSvcs() {
+  document.getElementById('svc-list').innerHTML = SVCS.map(svc => {
+    const st = state[svc.id];
+    const tot = svcTotal(svc);
+    const flat = isFlat(svc);
+    const preview = st.on && tot > 0 ? fmt(tot) : svc.tiers[st.tier].d;
+    return `<div class="svc-card ${st.on?'on':''}" id="sc-${svc.id}">
+      <div class="svc-header" onclick="toggle('${svc.id}')">
+        <div class="svc-check">
+          <svg class="chk-svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2 6.5l3.5 3.5 5.5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="svc-name">${svc.name}</span>
+        <span class="svc-amt">${preview}</span>
+      </div>
+      <div class="svc-body">
+        <div class="tier-grid">
+          ${svc.tiers.map((t,ti) => `
+            <div class="tier-btn ${st.tier===ti?'sel':''}" onclick="setTier('${svc.id}',${ti})">
+              ${t.l}<span class="tier-rate">${t.d}</span>
+            </div>`).join('')}
+        </div>
+        ${!flat ? `
+          <div class="qty-wrap">
+            <label>${svc.unit==='sq ft'?'Square footage':'Door count'}</label>
+            <input type="number" min="0" step="1" value="${st.qty||''}" placeholder="0"
+              oninput="setQty('${svc.id}',this.value)" style="width:90px;text-align:right">
+            <span class="unit">${svc.unit}</span>
+          </div>` : `<div class="flat-note" style="color:var(--teal);font-weight:600">${fmt(svc.tiers[st.tier].r)}+ flat rate</div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggle(id) {
+  state[id].on = !state[id].on;
+  renderSvcs();
+  update();
+}
+function setTier(id, ti) {
+  state[id].tier = ti;
+  renderSvcs();
+  update();
+}
+function setQty(id, v) {
+  state[id].qty = parseFloat(v) || 0;
+  update();
+}
+function update() {
+  const grand = SVCS.reduce((a, s) => a + svcTotal(s), 0);
+  const dep = grand * 0.5;
+  document.getElementById('sticky-amt').textContent = fmt(grand);
+  document.getElementById('sticky-dep').textContent = fmt(dep) + ' deposit';
+  document.getElementById('topbar-total').textContent = fmt(grand);
+}
+
+function showCustomer() {
+  const name  = document.getElementById('cname').value || 'Your Project';
+  const addr  = document.getElementById('caddr').value || '';
+  const grand = SVCS.reduce((a,s) => a + svcTotal(s), 0);
+  const dep   = grand * 0.5;
+  const active = SVCS.filter(s => state[s.id].on && svcTotal(s) > 0);
+
+  document.getElementById('cv-name').textContent    = name;
+  document.getElementById('cv-addr').textContent    = addr || 'Property TBD';
+  document.getElementById('cv-total').textContent   = fmt(grand);
+  document.getElementById('cv-deposit').textContent = fmt(dep) + ' deposit to get started';
+
+  document.getElementById('cv-lines').innerHTML = active.length
+    ? active.map(svc => {
+        const flat = isFlat(svc);
+        const t = svc.tiers[state[svc.id].tier];
+        return `<div class="li-row">
+          <div class="li-left">
+            <div class="li-name">${svc.name}</div>
+            <div class="li-tier">${t.l}${!flat?' · '+state[svc.id].qty.toLocaleString()+' '+svc.unit:' · flat rate'}</div>
+          </div>
+          <div class="li-val">${fmt(svcTotal(svc))}</div>
+        </div>`;
+      }).join('')
+    : '<div style="padding:16px 0;font-size:14px;color:#9a9994;text-align:center">No services selected</div>';
+
+  document.getElementById('cv-fin').innerHTML = grand
+    ? [6,12,24].map(mo => `<div class="fin-card">
+        <div class="fin-mo">${mo} mo</div>
+        <div class="fin-payment">${fmt(dep/mo)}/mo</div>
+        <div class="fin-note">on deposit</div>
+      </div>`).join('')
+    : '';
+
+  goPage('page-customer');
+}
+
+function showSend() {
+  const name  = document.getElementById('cname').value  || '—';
+  const email = document.getElementById('cemail').value || 'No email entered';
+  const phone = document.getElementById('cphone').value || 'No phone entered';
+  const addr  = document.getElementById('caddr').value  || 'No address entered';
+  const active = SVCS.filter(s => state[s.id].on && svcTotal(s) > 0);
+  const grand  = active.reduce((a,s) => a + svcTotal(s), 0);
+
+  document.getElementById('send-email-val').textContent = email;
+  document.getElementById('send-phone-val').textContent = phone;
+
+  let sum = `<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">${name}</div>`;
+  sum += `<div style="font-size:12px;color:var(--text2);margin-bottom:8px">${addr}</div>`;
+  if (active.length) {
+    active.forEach(s => {
+      sum += `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2)"><span>${s.name} · ${s.tiers[state[s.id].tier].l}</span><span style="font-weight:600;color:var(--text)">${fmt(svcTotal(s))}</span></div>`;
+    });
+    sum += `<div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;padding-top:8px;margin-top:4px;border-top:1px solid var(--border);color:var(--text)"><span>Total</span><span>${fmt(grand)}</span></div>`;
+    sum += `<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--teal);margin-top:3px"><span>50% deposit today</span><span style="font-weight:600">${fmt(grand*0.5)}</span></div>`;
+  } else {
+    sum += `<div style="font-size:13px;color:var(--text3)">No services selected</div>`;
+  }
+  document.getElementById('send-summary').innerHTML = sum;
+
+  goPage('page-send');
+}
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('sticky-total').style.display = id === 'page-build' ? 'flex' : 'none';
+  window.scrollTo(0,0);
+}
+
+function newQuote() {
+  SVCS.forEach(s => { state[s.id] = {on:false, tier:0, qty:0}; });
+  document.getElementById('cname').value  = '';
+  document.getElementById('cphone').value = '';
+  document.getElementById('caddr').value  = '';
+  document.getElementById('cemail').value = '';
+  renderSvcs();
+  update();
+  goPage('page-build');
+}
+
+renderSvcs();
+update();
+</script>
+</body>
+</html>
